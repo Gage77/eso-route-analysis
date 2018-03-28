@@ -42,7 +42,7 @@
         //this is the one with the bad for loop that throws an error sometimes
         //OVER_QUERY_LIMIT = too many google requests per second. Ideas on how to get around that would be awesome
         var onChangeHandler = function() {
-          for (var i = 0; i<routesMoW.length; ++i) {
+          for (var i = 2; i<routesMoW.length; ++i) {
               //calls calculate and display route with the route saved in i
               calculateAndDisplayRoute(directionsService, directionsDisplay, i);
           }
@@ -53,11 +53,13 @@
 
       //mostly used from existing
       function calculateAndDisplayRoute(directionsService, directionsDisplay, i) {
+
+        var routes  = routesMoW[i]
       	directionsService.route({
           origin: "Norman Regional Hospital, Norman, OK",
           waypoints: routesMoW[i],  //addresses from list
           optimizeWaypoints: true,
-          destination: "University of Oklahoma",  //get better one
+          destination: routes[routes.length-1].location,  //get better one
           travelMode: 'DRIVING'
           }, function(response, status) {
             if (status === 'OK') {
@@ -75,7 +77,7 @@
       function showDistance(directionResult) {
         var distance = 0
         var time = 0
-        for (var i = 0; i<directionResult.routes[0].legs.length; i++) {
+        for (var i = 2; i<directionResult.routes[0].legs.length; i++) {
             distance += directionResult.routes[0].legs[i].distance.value;
             time += directionResult.routes[0].legs[i].duration.value;
         }
@@ -166,6 +168,7 @@
               table += '</tr>';
             }
           }
+          routesMoW.push(waypts);
 
           table += '</tbody>';
           table += '</table>';
