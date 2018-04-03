@@ -8,15 +8,6 @@
   </head>
 
   <body>
-    <header>
-      <nav>
-        <ul>
-          <li><a href="analysisToolWithComments.html">Main Tool</a></li>
-          <li><a href="analysisToolWithSelectableRoutes.html">Selectable Routes Tool</a></li>
-        </ul>
-      </nav>
-    </header>
-
     <p>Select local CSV File:</p>
     <input id="csv" type="file">
 
@@ -54,7 +45,11 @@
           for (var i = 2; i<routesMoW.length; ++i) {
               //calls calculate and display route with the route saved in i
               calculateAndDisplayRoute(directionsService, directionsDisplay, i);
+              var k = 0;
+              while(k < 1000000000){ // Loop to bypass OVER_QUERY_LIMIT error
+                  k = k + 1;
           }
+        }
         };
 
         document.getElementById('go').addEventListener('click', onChangeHandler);
