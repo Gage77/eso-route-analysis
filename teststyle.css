@@ -1,9 +1,18 @@
+/*---------------------------MY CODE---------------------------------*/
+/*
+* Colors to use if we want to mimick the mealdeliverysoftware.com color scheme
+* #6D8B98
+* #7FA4B2
+* #939393
+*
+*/
+
 * {
   text-decoration: none;
 }
 
 header {
-  background-color: #fff;
+  background-color: #6D8B98;
   width: 100%;
   height: 50px;
 }
@@ -23,7 +32,7 @@ header nav ul li {
 
 header nav ul li a {
   font-size: 16px;
-  color: #0066cc;
+  color: #fff;
 }
 
 /*Desktop Version header*/

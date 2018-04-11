@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <title>Directions service</title>
     <link rel="stylesheet" href="teststyle.css">
+    <script src = "scripts/routesScript.js"></script>
   </head>
 
   <body>
+    <!--Header which includes the nav bar-->
     <header>
       <nav>
         <ul>
@@ -15,11 +17,26 @@
         </ul>
       </nav>
     </header>
+    <!--Main which includes the file selection as well as the toggle for the dropdown-->
     <main>
       <div class="Setup">
         <p>Select local CSV File:</p>
-        <input id="csv" type="file">
+        <script type="text/javascript" src="scripts/readcsv.js"></script>
+        <input type="file", id="csvFileInput", onchange="handleFiles(this.files)" accept=".csv">
+        <input type="button" value="Show route dropdown" name="displayChooseRoute" onclick="showDropDown()" />
       </div>
     </main>
+    <!--Dropdown to select route. When route is selected, the route itself is auto-generated-->
+    <div id="dropdowndiv" style="display:none;">
+      <form>
+        Select route:
+        <select id="routeList" onchange="generateRoute()">
+          <option value="" selected disabled hidden>Select Route</option>
+          <option value="">test</option>
+        </select>
+      </form>
+    </div>
+    <!--Table to hold current route-->
+    <table id="routesTable" border="2"></table>
   </body>
 </html>
