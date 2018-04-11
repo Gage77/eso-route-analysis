@@ -17,6 +17,7 @@
         </ul>
       </nav>
     </header>
+
     <!--Main which includes the file selection as well as the toggle for the dropdown-->
     <main>
       <div class="Setup">
@@ -26,6 +27,7 @@
         <input type="button" id="dropdownbutton" value="Show route dropdown" name="displayChooseRoute" onclick="showDropDown()"  disabled/>
       </div>
     </main>
+
     <!--Dropdown to select route. When route is selected, the route itself is auto-generated-->
     <div id="dropdowndiv" style="display:none;">
       <form>
@@ -38,12 +40,28 @@
     </div>
 
     <!--Table to hold current route, currently not using-->
-    <table id="routesTable" border="2"></table>
+    <input type="button" id="showtablebutton" value="Show table of route" name = "displayTable" onClick="showTable()" disabled/>
+    <div id="tablediv" style="display:none;">
+      <table id="routesTable">
+        <tr>
+          <th id="currentRouteTableHeader" colspan="7">Currently selected route: </th>
+        </tr>
+        <tr>
+          <th>Route Customer</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Zip</th>
+          <th>Route</th>
+          <th>Full Address</th>
+        </tr>
+      </table>
+    </div>
 
     <!--div to hold the google map instance-->
     <div id="map"></div>
     <!--map script that creates an instance of google maps-->
-    <!--All map functions are in the js file-->
+    <!--All map functions are at the top of the js file-->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-sHAH9e4fv3kNl08mUwh1vYUKRfO0di8&callback=initMap"></script>
   </body>
 </html>

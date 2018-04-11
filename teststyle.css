@@ -4,7 +4,6 @@
 * #6D8B98
 * #7FA4B2
 * #939393
-*
 */
 
 * {
@@ -45,6 +44,27 @@ header nav ul li a {
   header nav ul li a {
     line-height: 15px;
   }
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table th{
+  text-alight: left;
+  background-color: #6D8B98;
+  color: #fff;
+  padding: 4px 30px 4px 8px;
+}
+
+table td {
+  border: 1px solid #e3e3e3;
+  padding: 4px 8px;
+}
+
+/* Every other row color differently */
+table tr:nth-child(odd) td {
+  background-color: #DCDCDC;
 }
 
 /* Always set the map height explicitly to define the size of the div

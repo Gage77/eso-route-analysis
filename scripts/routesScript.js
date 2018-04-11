@@ -4,6 +4,7 @@
 
 var numRoutes = 0;  // Total number of unique routes for chosen csv
 var uniqueRoutes = [];  // Array of unique routes for chosen csv
+var tableHeaders = ["Driver", "Address", "City", "State", "Zip", "Route", "Full Address"];
 
 //***************************************************************
 // Perform the route generation / Google Maps stuff and thangs
@@ -27,14 +28,18 @@ function initMap() {
 }
 
 // Generate the full route of the route chosen from the dropdown menu
+// Also create a table of the route
 function generateRoute() {
-  // Get and store the currently selected option in the routeList select tag from
-  // the html page
+  // Get and store the currently selected option in the routeList select tag from the html page
   var select = document.getElementById("routeList");
   var selectedRoute = select.options[select.selectedIndex].value;
   console.log("generateRoute entered with selection" + selectedRoute);
 
+  // Create the html table of the associated route
+  generateTable(selectedRoute);
 
+  // Set show table button to enabled
+  document.getElementById("showtablebutton").disabled = false;
 }
 
 //***************************************************************
@@ -90,6 +95,7 @@ function processData(csv) {
   console.log(rows);
 
   updateDropDown(rows);
+
 }
 
 //***************************************************************
@@ -98,6 +104,7 @@ function processData(csv) {
 
 // Toggle the dropdown menu
 function showDropDown() {
+  console.log("show drop down pressed");
   if (document.getElementById("dropdowndiv").style.display == "block") {
     document.getElementById("dropdowndiv").style.display = "none";
   }
@@ -128,5 +135,27 @@ function updateDropDown(rows) {
   // Add HTML Select Options corresponding to the unique routes
   for (var j = 0; j < numRoutes; j++) {
     select.options[select.options.length] = new Option(uniqueRoutes[j], uniqueRoutes[j]);
+  }
+}
+
+// Create the table for the selected route
+function generateTable(selectedRoute) {
+  // Get the table
+  var table = document.getElementById("routesTable");
+
+  // Set the table header to the currently selected route
+  document.getElementById("currentRouteTableHeader").innerHTML = selectedRoute;
+
+
+}
+
+// Toggle the table
+function showTable() {
+  console.log("show table pressed");
+  if (document.getElementById("tablediv").style.display == "block") {
+    document.getElementById("tablediv").style.display = "none";
+  }
+  else {
+    document.getElementById("tablediv").style.display = "block";
   }
 }
