@@ -12,7 +12,8 @@
 var bigRouteArray = [];
 var numRoutes = 0;  // Total number of unique routes for chosen csv
 var uniqueRoutes = [];  // Array of unique routes for chosen csv
-var tableHeaders = ["Driver", "Address", "City", "State", "Zip", "Route", "Full Address"];
+var tableHeaders6 = ["Driver", "Address", "City", "State", "Zip", "Route", "Full Address"];
+var tableHeaders7 = ["Driver", "Address", "Building/Room", "City", "State", "Zip", "Route", "Full Address"];
 
 //***************************************************************
 // Perform the route generation / Google Maps stuff and thangs
@@ -160,6 +161,7 @@ function generateTable(selectedRoute) {
   // Set the table header to the currently selected route
   document.getElementById("currentRouteTableHeader").innerHTML = selectedRoute;
 
+  // Creat column headers for the chosen route based on arrary length
   var rowCount = table.rows.length;
   var tr = table.insertRow(rowCount);
 
