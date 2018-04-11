@@ -2,17 +2,38 @@
 // Global variables
 //***************************************************************
 
-var rows = [];
-var cols = [];
 var numRoutes = 0;  // Total number of unique routes for chosen csv
 var uniqueRoutes = [];  // Array of unique routes for chosen csv
 
 //***************************************************************
-// Perform the route generation
+// Perform the route generation / Google Maps stuff and thangs
 //***************************************************************
+
+// Initiate the map
+function initMap() {
+  // Set preset options for the google maps instance
+  var options = {
+    zoom:12,
+    center:{lat: 35.2226, lng: -97.4395}
+  }
+
+  // Create google maps special variables
+  var directionsService = new google.maps.DirectionsService;  // Used to calculate directions
+  var directionsDisplay = new google.maps.DirectionsRenderer; // Renders the results of the DirectionsService calculations
+  var map = new google.maps.Map(document.getElementById("map"), options); // The map itself
+
+  // Set what map the directionsDisplay should use
+  directionsDisplay.setMap(map);
+}
 
 // Generate the full route of the route chosen from the dropdown menu
 function generateRoute() {
+  // Get and store the currently selected option in the routeList select tag from
+  // the html page
+  var select = document.getElementById("routeList");
+  var selectedRoute = select.options[select.selectedIndex].value;
+  console.log("generateRoute entered with selection" + selectedRoute);
+
 
 }
 
@@ -57,16 +78,18 @@ function errorHandler(evt) {
 // Process the read in csv into rows and columns
 function processData(csv) {
   var allTextLines = csv.split(/\r\n|\n/);  // First split the csv by new lines (so split into rows)
+  var rows = [];
   for (var i = 0; i < allTextLines.length; i++) {
     var data = allTextLines[i].split(',');  // Next split by ',' to get individual elements in each row
+    var col = [];
     for (var j = 0; j < data.length; j++) {
-      cols.push(data[j]);  // Create an array for column information for the current row
+      col.push(data[j]);  // Create an array for column information for the current row
     }
     rows.push(col); // Put all of these columns into the row array (3-D array kinda)
   }
   console.log(rows);
 
-  updateDropDown();
+  updateDropDown(rows);
 }
 
 //***************************************************************
@@ -84,12 +107,26 @@ function showDropDown() {
 }
 
 // Update the items in the routes dropdown menu
-function updateDropDown() {
+function updateDropDown(rows) {
   // Run through the route names and add them to a global variable uniqueRoutes
   // if they are not already in that array
-  for (var i = 0; i < rows.length; i++) {
-    if ()
+  for (var i = 1; i < rows.length; i++) {
+    var route = rows[i][rows[i].length-1];
+    console.log(route);
+    // Add each unique route to the uniqueRoutes array, and increment numRoutes
+    if (!(uniqueRoutes.indexOf(route) > -1)) {
+      uniqueRoutes.push(route);
+      numRoutes = numRoutes + 1;
+    }
+
+    // Enable the open dropdown button now that the dropdown is populated
+    document.getElementById("dropdownbutton").disabled = false;
   }
 
+  // Get the dropdown menu from the html page
+  var select = document.getElementById("routeList");
   // Add HTML Select Options corresponding to the unique routes
+  for (var j = 0; j < numRoutes; j++) {
+    select.options[select.options.length] = new Option(uniqueRoutes[j], uniqueRoutes[j]);
+  }
 }

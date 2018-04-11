@@ -21,22 +21,29 @@
     <main>
       <div class="Setup">
         <p>Select local CSV File:</p>
-        <script type="text/javascript" src="scripts/readcsv.js"></script>
+        <script type="text/javascript" src="scripts/routesScript.js"></script>
         <input type="file", id="csvFileInput", onchange="handleFiles(this.files)" accept=".csv">
-        <input type="button" value="Show route dropdown" name="displayChooseRoute" onclick="showDropDown()" />
+        <input type="button" id="dropdownbutton" value="Show route dropdown" name="displayChooseRoute" onclick="showDropDown()"  disabled/>
       </div>
     </main>
     <!--Dropdown to select route. When route is selected, the route itself is auto-generated-->
     <div id="dropdowndiv" style="display:none;">
       <form>
         Select route:
+        <!--When new item is selected in dropdown, generate the corresponding route-->
         <select id="routeList" onchange="generateRoute()">
           <option value="" selected disabled hidden>Select Route</option>
-          <option value="">test</option>
         </select>
       </form>
     </div>
-    <!--Table to hold current route-->
+
+    <!--Table to hold current route, currently not using-->
     <table id="routesTable" border="2"></table>
+
+    <!--div to hold the google map instance-->
+    <div id="map"></div>
+    <!--map script that creates an instance of google maps-->
+    <!--All map functions are in the js file-->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-sHAH9e4fv3kNl08mUwh1vYUKRfO0di8&callback=initMap"></script>
   </body>
 </html>
