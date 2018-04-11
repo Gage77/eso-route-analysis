@@ -1,7 +1,15 @@
 //***************************************************************
+// @Author: Hunter Black
+// @Version: 0.8
+//
+// Notes:
+//***************************************************************
+
+//***************************************************************
 // Global variables
 //***************************************************************
 
+var bigRouteArray = [];
 var numRoutes = 0;  // Total number of unique routes for chosen csv
 var uniqueRoutes = [];  // Array of unique routes for chosen csv
 var tableHeaders = ["Driver", "Address", "City", "State", "Zip", "Route", "Full Address"];
@@ -94,6 +102,8 @@ function processData(csv) {
   }
   console.log(rows);
 
+  bigRouteArray = rows;
+
   updateDropDown(rows);
 
 }
@@ -106,19 +116,21 @@ function processData(csv) {
 function showDropDown() {
   console.log("show drop down pressed");
   if (document.getElementById("dropdowndiv").style.display == "block") {
+    document.getElementById("dropdownbutton").value = "Show route dropdown";
     document.getElementById("dropdowndiv").style.display = "none";
   }
   else {
     document.getElementById("dropdowndiv").style.display = "block";
+    document.getElementById("dropdownbutton").value = "Hide route dropdown";
   }
 }
 
 // Update the items in the routes dropdown menu
-function updateDropDown(rows) {
+function updateDropDown() {
   // Run through the route names and add them to a global variable uniqueRoutes
   // if they are not already in that array
-  for (var i = 1; i < rows.length; i++) {
-    var route = rows[i][rows[i].length-1];
+  for (var i = 1; i < bigRouteArray.length; i++) {
+    var route = bigRouteArray[i][bigRouteArray[i].length-1];
     console.log(route);
     // Add each unique route to the uniqueRoutes array, and increment numRoutes
     if (!(uniqueRoutes.indexOf(route) > -1)) {
@@ -143,19 +155,45 @@ function generateTable(selectedRoute) {
   // Get the table
   var table = document.getElementById("routesTable");
 
+  addTableHeaders(table);
+
   // Set the table header to the currently selected route
   document.getElementById("currentRouteTableHeader").innerHTML = selectedRoute;
 
+  var rowCount = table.rows.length;
+  var tr = table.insertRow(rowCount);
 
+  for (var i = 0; i < tableHeaders.length; i++) {
+    var td = document.createElement('td');
+    td = tr.insertCell(i);
+
+    // First column (customer name)
+    if (i == 0) {
+
+    }
+    // Second column (Address)
+    else if (i == 1) {
+
+    }
+  }
 }
 
 // Toggle the table
 function showTable() {
   console.log("show table pressed");
   if (document.getElementById("tablediv").style.display == "block") {
+    document.getElementById("showtablebutton").value = "Show table of route";
     document.getElementById("tablediv").style.display = "none";
   }
   else {
     document.getElementById("tablediv").style.display = "block";
+    document.getElementById("showtablebutton").value = "Hide table of route";
   }
+}
+
+//***************************************************************
+// Utility functions
+//***************************************************************
+function addTableHeaders(table) {
+
 }
