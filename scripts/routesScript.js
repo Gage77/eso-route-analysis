@@ -12,7 +12,7 @@
 var bigRouteArray = [];
 var numRoutes = 0;  // Total number of unique routes for chosen csv
 var uniqueRoutes = [];  // Array of unique routes for chosen csv
-var currentRoute = [];  // Array of the currently selected route
+var currentRoute = [];  // Array of the currently selected route's individual adresses
 
 //***************************************************************
 // Perform the route generation / Google Maps stuff and thangs
@@ -102,10 +102,13 @@ function processData(csv) {
   }
   console.log(rows);
 
+  // Empty out the bigRouteArray in case there is any info in their currently
+  // This is used for when user wants to switch CSV
+  bigRouteArray = [];
+
   bigRouteArray = rows;
 
   updateDropDown(rows);
-
 }
 
 //***************************************************************
@@ -156,6 +159,12 @@ function generateTable(selectedRoute) {
   // Get the table
   var table = document.getElementById("routesTable");
 
+  // Get rid of any currently populated rows in the table to prevent "stacking"
+  var rowCount = table.rows.length;
+  while (--rowCount) {
+    table.deleteRow(rowCount);
+  }
+
   // Set the table header to the currently selected route
   document.getElementById("currentRouteTableHeader").innerHTML = selectedRoute;
 
@@ -168,15 +177,18 @@ function generateTable(selectedRoute) {
 
   // Set the currently selected route array
   for (var i = 0; i < bigRouteArray.length; i++) {
+    // If the route listed for the i'th index of bigRouteArray is the same as the currently selected route
     if (bigRouteArray[i][bigRouteArray[i].length-1] == selectedRoute) {
-      currentRoute.push(bigRouteArray[i]);
+      currentRoute.push(bigRouteArray[i]);  // add it to the current route array
     }
   }
 
+  // Confirm currnetRoute array is populated correctly
   for (var j = 0; j < currentRoute.length; j++) {
     console.log(currentRoute[j]);
   }
 
+  // Add rows to the html table
   addRowsToTable(table);
 }
 
@@ -201,4 +213,47 @@ function showTable() {
 // Add rows to the table for the currently selected route
 function addRowsToTable(table) {
   console.log("Add rows to table function entered");
+  // Populate table
+  for (var i = 0; i < currentRoute.length; i++) {
+    // Make a new row for each route in the currentRoute array
+    var row = table.insertRow(table.rows.length);
+    // Add 8 cells under each header item from the table
+    for (var j = 0; j < 8; j++) {
+      var newCell = row.insertCell(j);
+      // Populate cell based on cell index
+      switch (j) {
+        case 0: // Name of route customer
+          newCell.innerHTML = currentRoute[i][0];
+          break;
+        case 1: // Address
+          newCell.innerHTML = currentRoute[i][1];
+          break;
+        case 2: // Building/room (if applicable)
+          if (currentRoute[i].length == 6) {
+            newCell.innerHTML = "-";
+          }
+          else {
+            newCell.innerHTML = currentRoute[i][2];
+          }
+          break;
+        case 3: // City
+          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 4];
+          break;
+        case 4: // State
+          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 3];
+          break;
+        case 5: // Zip
+          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 2];
+          break;
+        case 6: // Route
+          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 1];
+          break;
+        case 7: // Full Address
+          break;
+      }
+    }
+    //var cell1 = row.insertCell(0);
+    var t1 = document.createElement("input");
+    t1.id = ""
+  }
 }
