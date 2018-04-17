@@ -28,12 +28,14 @@
     <button id="go">Go!</button>
 
     <div id="map"></div>
+    <div id = "output"> output goes here! </div>
     <!--main script to calculate routes after selecting a local CSV containing addresses-->
     <script>
       //global variables
       //big routes array
       var routesMoW = [];
-
+      var outputTable = '<table id="outputTable">';
+        
       //initialize map function
       function initMap() {
         //creating google map variables (API ones)
@@ -51,10 +53,11 @@
         //this is the one with the bad for loop that throws an error sometimes
         //OVER_QUERY_LIMIT = too many google requests per second. Ideas on how to get around that would be awesome
         var onChangeHandler = function() {
+          outputTable += '\n<tr><th>Number of Stops</th><th>Distance</th><th>Time</th> </tr>\n';
           for (var i = 2; i<routesMoW.length; ++i) {
               //calls calculate and display route with the route saved in i
               calculateAndDisplayRoute(directionsService, directionsDisplay, i);
-          }
+          }     
         };
 
         document.getElementById('go').addEventListener('click', onChangeHandler);
@@ -75,27 +78,50 @@
               //shows directions - questionably necessary
               directionsDisplay.setDirections(response);
               //calculates time - necessary
-              showDistance(response);
+              showDistance(response, i);
             }
             else {
               window.alert('Directions request failed due to ' + status);
+              outputTable += '<tr><td>NA</td><td>NA</td><td>NA</td></tr>\n';
+
             }
         });
       }
 
-      function showDistance(directionResult) {
+      function showDistance(directionResult, index) {
         var distance = 0
         var time = 0
-        for (var i = 2; i<directionResult.routes[0].legs.length; i++) {
-            distance += directionResult.routes[0].legs[i].distance.value;
-            time += directionResult.routes[0].legs[i].duration.value;
+        for (var j = 2; j<directionResult.routes[0].legs.length; j++) {
+            distance += directionResult.routes[0].legs[j].distance.value;
+            time += directionResult.routes[0].legs[j].duration.value;
         }
-
+        distance2 = Math.ceil(distance/1609.34*100)/100;
+        time2 = Math.ceil(time/60*100)/100;
+        outputTable += '<tr>'
+            outputTable += '<td>';
+            outputTable += (directionResult.routes[0].legs.length-1).toString();
+            outputTable += '</td>';
+            outputTable += '<td>';
+            outputTable += distance2.toString();
+            outputTable += '</td>';
+            outputTable += '<td>';
+            outputTable += time2.toString();
+            outputTable += '</td>';
+        outputTable += '</tr>\n';
+        console.log (index);
+        console.log(routesMoW.length-1);
+        console.log(outputTable);
+        if (index === (routesMoW.length-1) || index === (routesMoW.length-2) || index === (routesMoW.length-3)) {
+          outputTable += '</table>';
+          document.getElementById('output').innerHTML = outputTable;
+          exportTableToCSV('data.csv');
+        
+        }
         //outputs all of the info. NEEDS BETTER FORMATTING
-        console.log(distance)
-        console.log(time)
-        console.log(distance/1609.34 + " miles")
-        console.log(time/60 + " minutes")
+        //console.log(distance)
+        //console.log(time)
+        //console.log(distance/1609.34 + " miles")
+        //console.log(time/60 + " minutes")
       }
 
       //file input reader found when I googled "How to read in a csv file to javascript"
@@ -189,7 +215,52 @@
         reader.readAsBinaryString(fileInput.files[0]);
       };
 
+    
       fileInput.addEventListener('change', readFile);
+        
+    function downloadCSV(csv, filename) {
+        var csvFile;
+        var downloadLink;
+
+        // CSV file
+        csvFile = new Blob([csv], {type: "text/csv"});
+
+        // Download link
+        downloadLink = document.createElement("a");
+
+        // File name
+        downloadLink.download = filename;
+
+        // Create a link to the file
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+
+        // Hide download link
+        downloadLink.style.display = "none";
+
+        // Add the link to DOM
+        document.body.appendChild(downloadLink);
+
+        // Click download link
+        downloadLink.click();
+    }
+
+    function exportTableToCSV(filename) {
+        var csv = [];
+        var table = document.getElementById("outputTable"); 
+        var rows = table.rows;//document.querySelectorAll("table tr");
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = [], cols = rows[i].querySelectorAll("td, th");
+
+            for (var j = 0; j < cols.length; j++) 
+                row.push(cols[j].innerText);
+
+            csv.push(row.join(","));        
+        }
+
+        // Download CSV file
+        downloadCSV(csv.join("\n"), filename);
+    }
     </script>
 
     <!--map script that creates an instance of google maps-->
