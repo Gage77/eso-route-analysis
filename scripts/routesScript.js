@@ -56,7 +56,7 @@ function generateRoute() {
 function generateDirections() {
   console.log("generateDirections entered");
 
-  var start = {lat:35.2311,lng:-97.4401}  // Norman Regional Hospital lat/long
+  var start = "Norman Regional Hospital, Norman, OK";  // Norman Regional Hospital lat/long
 
   for (var i = 0; i < currentRouteAddresses.length; i++) {
     console.log(currentRouteAddresses[i]);
@@ -66,7 +66,7 @@ function generateDirections() {
     origin: start,
     waypoints: currentRouteAddresses,
     optimizeWaypoints: true,
-    destination: currentRouteAddresses[currentRouteAddresses.length-1],
+    destination: currentRouteAddresses[currentRouteAddresses.length-1].location,
     travelMode: 'DRIVING'
   }, function(response, status) {
     if (status === 'OK') {
@@ -252,6 +252,9 @@ function showTable() {
 
 // Add rows to the table for the currently selected route
 function addRowsToTable(table) {
+  // Clear out any full addresses that may be in the currentRouteAddresses waypoint array
+  currentRouteAddresses = [];
+
   console.log("Add rows to table function entered");
   // Populate table
   for (var i = 0; i < currentRoute.length; i++) {
@@ -307,7 +310,10 @@ function addRowsToTable(table) {
           fullAddress += currentRoute[i][currentRoute[i].length - 2].replace('\"', '').replace('\"', '');
           newCell.innerHTML = fullAddress;
           // Add full address to the "waypoints" array
-          currentRouteAddresses.push(fullAddress);
+          currentRouteAddresses.push({
+            location: fullAddress,
+            stopover: true
+          });
           break;
       }
     }
