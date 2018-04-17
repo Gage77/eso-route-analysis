@@ -13,6 +13,7 @@ var bigRouteArray = [];
 var numRoutes = 0;  // Total number of unique routes for chosen csv
 var uniqueRoutes = [];  // Array of unique routes for chosen csv
 var currentRoute = [];  // Array of the currently selected route's individual adresses
+var currentRouteAddresses = []; // Array to hold actual addresses of the current route
 
 //***************************************************************
 // Perform the route generation / Google Maps stuff and thangs
@@ -48,6 +49,30 @@ function generateRoute() {
 
   // Set show table button to enabled
   document.getElementById("showtablebutton").disabled = false;
+}
+
+function generateDirections() {
+  console.log("generateDirections entered");
+
+  var start = {lat:35.2311,lng:-97.4401}  // Norman Regional Hospital lat/long
+
+  // directionsService.route({
+  //   origin: start,
+  //   waypoints: ,
+  //   optimizeWaypoints: true,
+  //   destination: ,
+  //   travelMode: 'DRIVING'
+  // }, function(response, status) {
+  //   if (status === 'OK') {
+  //     // show directions
+  //     directionsDisplay.setDirections(response);
+  //     // calculate time
+  //     showDistance(response);
+  //   }
+  //   else {
+  //     window.alert("Directions request failed due to " + status);
+  //   }
+  // });
 }
 
 //***************************************************************
@@ -131,6 +156,7 @@ function showDropDown() {
 
 // Update the items in the routes dropdown menu
 function updateDropDown() {
+  uniqueRoutes.length = 0;
   // Run through the route names and add them to a global variable uniqueRoutes
   // if they are not already in that array
   for (var i = 1; i < bigRouteArray.length; i++) {
@@ -148,6 +174,10 @@ function updateDropDown() {
 
   // Get the dropdown menu from the html page
   var select = document.getElementById("routeList");
+
+  // Empty out whatever is in there
+  select.options.length = 0;
+
   // Add HTML Select Options corresponding to the unique routes
   for (var j = 0; j < numRoutes; j++) {
     select.options[select.options.length] = new Option(uniqueRoutes[j], uniqueRoutes[j]);
@@ -160,9 +190,10 @@ function generateTable(selectedRoute) {
   var table = document.getElementById("routesTable");
 
   // Get rid of any currently populated rows in the table to prevent "stacking"
+  var headerCount = 2;
   var rowCount = table.rows.length;
-  while (--rowCount) {
-    table.deleteRow(rowCount);
+  for (var i = headerCount; i < rowCount; i++) {
+    table.deleteRow(headerCount);
   }
 
   // Set the table header to the currently selected route
@@ -190,6 +221,9 @@ function generateTable(selectedRoute) {
 
   // Add rows to the html table
   addRowsToTable(table);
+
+  // Enable the generate direction button
+  document.getElementById("directionButton").disabled = false;
 }
 
 // Toggle the table being visible
@@ -223,37 +257,53 @@ function addRowsToTable(table) {
       // Populate cell based on cell index
       switch (j) {
         case 0: // Name of route customer
-          newCell.innerHTML = currentRoute[i][0];
+          newCell.innerHTML = currentRoute[i][0].replace('\"', '').replace('\"', '');
           break;
         case 1: // Address
-          newCell.innerHTML = currentRoute[i][1];
+          newCell.innerHTML = currentRoute[i][1].replace('\"', '').replace('\"', '');
           break;
         case 2: // Building/room (if applicable)
           if (currentRoute[i].length == 6) {
             newCell.innerHTML = "-";
           }
-          else {
-            newCell.innerHTML = currentRoute[i][2];
+          else if (currentRoute[i].length == 7) {
+            var value = currentRoute[i][2];
+            if (value.includes("Norman")) {
+              newCell.innerHTML = "-";
+            }
+            else {
+              newCell.innerHTML = currentRoute[i][2].replace('\"', '').replace('\"', '');
+            }
           }
           break;
+        // The next 4 cases are based on the end of the array because of discrepencies
+        // in the first few elements of the route arrays as well as varying lengths
         case 3: // City
-          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 4];
+          if (currentRoute[i][currentRoute[i].length - 4] == "\"") {
+            newCell.innerHTML = "Norman";
+          }
+          else {
+            newCell.innerHTML = currentRoute[i][currentRoute[i].length - 4].replace('\"', '').replace('\"', '');
+          }
           break;
         case 4: // State
-          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 3];
+          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 3].replace('\"', '').replace('\"', '');
           break;
         case 5: // Zip
-          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 2];
+          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 2].replace('\"', '').replace('\"', '');
           break;
         case 6: // Route
-          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 1];
+          newCell.innerHTML = currentRoute[i][currentRoute[i].length - 1].replace('\"', '').replace('\"', '');
           break;
         case 7: // Full Address
+          var fullAddress = currentRoute[i][1].replace('\"', '').replace('\"', '');
+          fullAddress += ", Norman, Oklahoma, ";
+          fullAddress += currentRoute[i][currentRoute[i].length - 2].replace('\"', '').replace('\"', '');
+          newCell.innerHTML = fullAddress;
           break;
       }
     }
-    //var cell1 = row.insertCell(0);
-    var t1 = document.createElement("input");
-    t1.id = ""
+    // var t1 = document.createElement("input");
+    // t1.id = ""
   }
 }
