@@ -13,7 +13,9 @@ var bigRouteArray = [];
 var numRoutes = 0;  // Total number of unique routes for chosen csv
 var uniqueRoutes = [];  // Array of unique routes for chosen csv
 var currentRoute = [];  // Array of the currently selected route's individual adresses
-var currentRouteAddresses = []; // Array to hold actual addresses of the current route
+var currentRouteAddresses = []; // Array to hold actual addresses of the current route ("waypoints")
+var directionService;
+var directionsDisplay;
 
 //***************************************************************
 // Perform the route generation / Google Maps stuff and thangs
@@ -28,8 +30,8 @@ function initMap() {
   }
 
   // Create google maps special variables
-  var directionsService = new google.maps.DirectionsService;  // Used to calculate directions
-  var directionsDisplay = new google.maps.DirectionsRenderer; // Renders the results of the DirectionsService calculations
+  directionsService = new google.maps.DirectionsService;  // Used to calculate directions
+  directionsDisplay = new google.maps.DirectionsRenderer; // Renders the results of the DirectionsService calculations
   var map = new google.maps.Map(document.getElementById("map"), options); // The map itself
 
   // Set what map the directionsDisplay should use
@@ -56,23 +58,27 @@ function generateDirections() {
 
   var start = {lat:35.2311,lng:-97.4401}  // Norman Regional Hospital lat/long
 
-  // directionsService.route({
-  //   origin: start,
-  //   waypoints: ,
-  //   optimizeWaypoints: true,
-  //   destination: ,
-  //   travelMode: 'DRIVING'
-  // }, function(response, status) {
-  //   if (status === 'OK') {
-  //     // show directions
-  //     directionsDisplay.setDirections(response);
-  //     // calculate time
-  //     showDistance(response);
-  //   }
-  //   else {
-  //     window.alert("Directions request failed due to " + status);
-  //   }
-  // });
+  for (var i = 0; i < currentRouteAddresses.length; i++) {
+    console.log(currentRouteAddresses[i]);
+  }
+
+  directionsService.route({
+    origin: start,
+    waypoints: currentRouteAddresses,
+    optimizeWaypoints: true,
+    destination: currentRouteAddresses[currentRouteAddresses.length-1],
+    travelMode: 'DRIVING'
+  }, function(response, status) {
+    if (status === 'OK') {
+      // show directions
+      directionsDisplay.setDirections(response);
+      // calculate time
+      showDistance(response);
+    }
+    else {
+      window.alert("Directions request failed due to " + status);
+    }
+  });
 }
 
 //***************************************************************
@@ -300,10 +306,10 @@ function addRowsToTable(table) {
           fullAddress += ", Norman, Oklahoma, ";
           fullAddress += currentRoute[i][currentRoute[i].length - 2].replace('\"', '').replace('\"', '');
           newCell.innerHTML = fullAddress;
+          // Add full address to the "waypoints" array
+          currentRouteAddresses.push(fullAddress);
           break;
       }
     }
-    // var t1 = document.createElement("input");
-    // t1.id = ""
   }
 }
