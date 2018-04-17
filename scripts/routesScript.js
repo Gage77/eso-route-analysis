@@ -73,12 +73,31 @@ function generateDirections() {
       // show directions
       directionsDisplay.setDirections(response);
       // calculate time
-      showDistance(response);
+      showRouteData(response);
     }
     else {
       window.alert("Directions request failed due to " + status);
     }
   });
+}
+
+function showRouteData(directionResult) {
+  var distance = 0;
+  var time = 0;
+
+  // Grab distance and time from directionResult object
+  for (var i = 0; i < directionResult.routes[0].legs.length; i++) {
+    distance += directionResult.routes[0].legs[i].distance.value;
+    time += directionResult.routes[0].legs[i].duration.value;
+  }
+
+  // Convert distance and time variables
+  distance = (Math.ceil(distance/1609.34*100)/100) + " miles";
+  time = (Math.ceil(time/60*100)/100) + " minutes";
+
+  // Show distance and time variables
+  console.log(distance);
+  console.log(time);
 }
 
 //***************************************************************

@@ -12,4 +12,4 @@ This simple web application serves to take an input of addresses provided by Mea
 
 ### Current tools being used:
 - mealdeliverysoftware.com/software/
-- Current routes are available by logging in and downloading a csv
+- Current routes are available by logging in and downloading a csv by going to "Delivery" -> "Delivery Reports" -> "Delivery Address Data".
