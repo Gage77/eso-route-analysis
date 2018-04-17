@@ -35,7 +35,7 @@
       //big routes array
       var routesMoW = [];
       var outputTable = '<table id="outputTable">';
-        
+      var downloaded = false;
       //initialize map function
       function initMap() {
         //creating google map variables (API ones)
@@ -111,10 +111,12 @@
         console.log (index);
         console.log(routesMoW.length-1);
         console.log(outputTable);
-        if (index === (routesMoW.length-1) || index === (routesMoW.length-2) || index === (routesMoW.length-3)) {
-          outputTable += '</table>';
-          document.getElementById('output').innerHTML = outputTable;
-          exportTableToCSV('data.csv');
+
+        if ((index === (routesMoW.length-1) || index === (routesMoW.length-2) || index === (routesMoW.length-3) || index === (routesMoW.length-4)) & downloaded === false) {
+                outputTable += '</table>';
+                document.getElementById('output').innerHTML = outputTable;
+                exportTableToCSV('data.csv');
+                downloaded = true;
         
         }
         //outputs all of the info. NEEDS BETTER FORMATTING
