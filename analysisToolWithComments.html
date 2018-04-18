@@ -53,7 +53,7 @@
         //this is the one with the bad for loop that throws an error sometimes
         //OVER_QUERY_LIMIT = too many google requests per second. Ideas on how to get around that would be awesome
         var onChangeHandler = function() {
-          outputTable += '\n<tr><th>Number of Stops</th><th>Distance</th><th>Time</th> </tr>\n';
+          outputTable += '\n<tr><th>Route Name </th><th>Number of Stops</th><th>Distance</th><th>Time</th> </tr>\n';
           for (var i = 2; i<routesMoW.length; ++i) {
               //calls calculate and display route with the route saved in i
               calculateAndDisplayRoute(directionsService, directionsDisplay, i);
@@ -67,23 +67,33 @@
       function calculateAndDisplayRoute(directionsService, directionsDisplay, i) {
 
         var routes  = routesMoW[i]
+        var finish;
+        if (typeof routes.addresses === 'undefined') {
+              finish = "University of Oklahoma";
+         } else {
+              finish = routes.addresses[routes.addresses.length-1].location;  //get better one
+        }
       	directionsService.route({
           origin: "Norman Regional Hospital, Norman, OK",
-          waypoints: routesMoW[i],  //addresses from list
+          waypoints: routesMoW[i].addresses,  //addresses from list
           optimizeWaypoints: true,
-          destination: routes[routes.length-1].location,  //get better one
+            destination: finish,
           travelMode: 'DRIVING'
           }, function(response, status) {
             if (status === 'OK') {
               //shows directions - questionably necessary
               directionsDisplay.setDirections(response);
               //calculates time - necessary
+                outputTable += '<tr><td>';
+                outputTable += routes.routeName;
+                outputTable += '</td>'    
               showDistance(response, i);
             }
             else {
               window.alert('Directions request failed due to ' + status);
-              outputTable += '<tr><td>NA</td><td>NA</td><td>NA</td></tr>\n';
-
+              if (status === 'ZERO_RESULTS') {
+              outputTable += '<tr><td>NA</td><td>NA</td><td>NA</td><td>NA</td></tr>\n';
+              }
             }
         });
       }
@@ -91,13 +101,12 @@
       function showDistance(directionResult, index) {
         var distance = 0
         var time = 0
-        for (var j = 2; j<directionResult.routes[0].legs.length; j++) {
+        for (var j = 0; j<directionResult.routes[0].legs.length-1; j++) {
             distance += directionResult.routes[0].legs[j].distance.value;
             time += directionResult.routes[0].legs[j].duration.value;
         }
         distance2 = Math.ceil(distance/1609.34*100)/100;
         time2 = Math.ceil(time/60*100)/100;
-        outputTable += '<tr>'
             outputTable += '<td>';
             outputTable += (directionResult.routes[0].legs.length-1).toString();
             outputTable += '</td>';
@@ -115,6 +124,8 @@
         if ((index === (routesMoW.length-1) || index === (routesMoW.length-2) || index === (routesMoW.length-3) || index === (routesMoW.length-4)) & downloaded === false) {
                 outputTable += '</table>';
                 document.getElementById('output').innerHTML = outputTable;
+                //exports to CSV - mess with file names?
+            //COMMENT THIS LINE OUT IF YOU DON'T WANT CSV FILE!!!
                 exportTableToCSV('data.csv');
                 downloaded = true;
         
@@ -188,7 +199,11 @@
             }
             else {
               //else, add that array to the big one and start over for next route
-              routesMoW.push(waypts);
+              routesMoW.push({
+                addresses: waypts,
+                routeName: prevRoute
+              });
+              console.log(routesMoW.routeName);
               waypts = [];
               waypts.push({
                 location: address,
