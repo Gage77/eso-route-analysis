@@ -14,8 +14,10 @@ var numRoutes = 0;  // Total number of unique routes for chosen csv
 var uniqueRoutes = [];  // Array of unique routes for chosen csv
 var currentRoute = [];  // Array of the currently selected route's individual adresses
 var currentRouteAddresses = []; // Array to hold actual addresses of the current route ("waypoints")
-var directionService;
-var directionsDisplay;
+var selectedRoute = "";
+
+var directionService; // Google maps api direction calculation
+var directionsDisplay;  // Google maps api direction renderer
 
 //***************************************************************
 // Perform the route generation / Google Maps stuff and thangs
@@ -43,7 +45,7 @@ function initMap() {
 function generateRoute() {
   // Get and store the currently selected option in the routeList select tag from the html page
   var select = document.getElementById("routeList");
-  var selectedRoute = select.options[select.selectedIndex].value;
+  selectedRoute = select.options[select.selectedIndex].value;
   console.log("generateRoute entered with selection" + selectedRoute);
 
   // Create the html table of the associated route
@@ -84,6 +86,7 @@ function generateDirections() {
 function showRouteData(directionResult) {
   var distance = 0;
   var time = 0;
+  var numStops = 0;
 
   // Grab distance and time from directionResult object
   for (var i = 0; i < directionResult.routes[0].legs.length; i++) {
@@ -92,12 +95,34 @@ function showRouteData(directionResult) {
   }
 
   // Convert distance and time variables
-  distance = (Math.ceil(distance/1609.34*100)/100) + " miles";
-  time = (Math.ceil(time/60*100)/100) + " minutes";
+  distance = (Math.ceil(distance/1609.34*100)/100);
+  time = (Math.ceil(time/60*100)/100);
+  numStops = directionResult.routes[0].legs.length - 1;
 
-  // Show distance and time variables
+  // Show distance and time variables in console
   console.log(distance);
   console.log(time);
+  console.log(numStops)
+
+  // Update direction data table
+  dataTable = document.getElementById("directionDataTable");
+  var newRow = dataTable.insertRow(dataTable.rows.length);
+  var newCell;
+  for (var j = 0; j < 4; j++) {
+    newCell = newRow.insertCell(j);
+    if (j === 0) {
+      newCell.innerHTML = selectedRoute;
+    }
+    else if (j === 1) {
+      newCell.innerHTML = numStops;
+    }
+    else if (j === 2) {
+      newCell.innerHTML = distance;
+    }
+    else if (j === 3) {
+      newCell.innerHTML = time;
+    }
+  }
 }
 
 //***************************************************************
@@ -159,6 +184,14 @@ function processData(csv) {
   bigRouteArray = rows;
 
   updateDropDown(rows);
+
+  // Empty out the direction data table of any old data
+  var directionTable = document.getElementById("directionDataTable");
+  var directionHeaderCount = 1;
+  var rowCount = directionTable.rows.length;
+  for (var i = directionHeaderCount; i < rowCount; i++) {
+    directionTable.deleteRow(directionHeaderCount);
+  }
 }
 
 //***************************************************************
