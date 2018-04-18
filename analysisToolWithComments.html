@@ -53,10 +53,14 @@
         //this is the one with the bad for loop that throws an error sometimes
         //OVER_QUERY_LIMIT = too many google requests per second. Ideas on how to get around that would be awesome
         var onChangeHandler = function() {
-          outputTable += '\n<tr><th>Route Name </th><th>Number of Stops</th><th>Distance</th><th>Time</th> </tr>\n';
-          for (var i = 2; i<routesMoW.length; ++i) {
+          outputTable += '\n<tr><th>Route Name </th><th>Number of Stops</th><th>Distance</th><th>Time</th> <th>Time + 3 per stop </th><th>Time + 5 per stop</th> </tr>\n';
+          for (var i = 2; i<routesMoW.length-1; ++i) {
               //calls calculate and display route with the route saved in i
               calculateAndDisplayRoute(directionsService, directionsDisplay, i);
+              var k = 0;
+              while(k < 1000000000){ // Loop to bypass OVER_QUERY_LIMIT error
+                  k = k + 1;
+          }
           }     
         };
 
@@ -67,6 +71,7 @@
       function calculateAndDisplayRoute(directionsService, directionsDisplay, i) {
 
         var routes  = routesMoW[i]
+        var numStops = routesMoW[i].addresses.length
         var finish;
         if (typeof routes.addresses === 'undefined') {
               finish = "University of Oklahoma";
@@ -87,26 +92,29 @@
                 outputTable += '<tr><td>';
                 outputTable += routes.routeName;
                 outputTable += '</td>'    
-              showDistance(response, i);
+              showDistance(response, i, numStops);
             }
             else {
               window.alert('Directions request failed due to ' + status);
               if (status === 'ZERO_RESULTS') {
-              outputTable += '<tr><td>NA</td><td>NA</td><td>NA</td><td>NA</td></tr>\n';
+              outputTable += '<tr><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td></tr>\n';
               }
             }
         });
       }
 
-      function showDistance(directionResult, index) {
+      function showDistance(directionResult, index, numStops) {
         var distance = 0
         var time = 0
+        console.log(numStops);
         for (var j = 0; j<directionResult.routes[0].legs.length-1; j++) {
             distance += directionResult.routes[0].legs[j].distance.value;
             time += directionResult.routes[0].legs[j].duration.value;
         }
-        distance2 = Math.ceil(distance/1609.34*100)/100;
-        time2 = Math.ceil(time/60*100)/100;
+        var distance2 = Math.ceil(distance/1609.34*100)/100;
+        var time2 = Math.ceil(time/60*100)/100;
+        var time2with3minStops = Math.floor((time2 + 3*(numStops))*100)/100;
+        var time2with5minStops = Math.floor((time2 + 5*(numStops))*100)/100; 
             outputTable += '<td>';
             outputTable += (directionResult.routes[0].legs.length-1).toString();
             outputTable += '</td>';
@@ -115,6 +123,12 @@
             outputTable += '</td>';
             outputTable += '<td>';
             outputTable += time2.toString();
+            outputTable += '</td>';
+            outputTable += '<td>';
+            outputTable += time2with3minStops.toString();
+            outputTable += '</td>';
+            outputTable += '<td>';
+            outputTable += time2with5minStops.toString();
             outputTable += '</td>';
         outputTable += '</tr>\n';
         console.log (index);
@@ -224,7 +238,12 @@
 
           table += '</tbody>';
           table += '</table>';
-
+          var index = 0;
+          for (index = 0; index<routesMoW.length; ++index) {
+              console.log(index);
+              console.log(routesMoW[index].routeName);
+              console.log(routesMoW[index].addresses);
+          }
           document.getElementById('table').innerHTML = table;
         }
 
