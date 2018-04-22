@@ -59,6 +59,15 @@ function generateDirections() {
   console.log("generateDirections entered");
 
   var start = "Norman Regional Hospital, Norman, OK";  // Norman Regional Hospital lat/long
+  var chosenDestination = document.getElementById("chooseDestination").value;
+
+  var destination = currentRouteAddresses[currentRouteAddresses.length-1].location
+  if (chosenDestination.valueOf() != "Default".valueOf()) {
+    console.log("destination specified");
+    destination = chosenDestination;
+  }
+
+  console.log(destination);
 
   for (var i = 0; i < currentRouteAddresses.length; i++) {
     console.log(currentRouteAddresses[i]);
@@ -68,7 +77,7 @@ function generateDirections() {
     origin: start,
     waypoints: currentRouteAddresses,
     optimizeWaypoints: true,
-    destination: currentRouteAddresses[currentRouteAddresses.length-1].location,
+    destination: destination,
     travelMode: 'DRIVING'
   }, function(response, status) {
     if (status === 'OK') {
@@ -235,6 +244,7 @@ function updateDropDown() {
 
   // Empty out whatever is in there
   select.options.length = 0;
+  select.options[select.options.length] = new Option("Select a route");
 
   // Add HTML Select Options corresponding to the unique routes
   for (var j = 0; j < numRoutes; j++) {
