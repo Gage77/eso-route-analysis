@@ -336,6 +336,9 @@ function addRowsToTable(table) {
               newCell.innerHTML = currentRoute[i][2].replace('\"', '').replace('\"', '');
             }
           }
+          else if (currentRoute[i].length == 8) {
+            newCell.innerHTML = currentRoute[i][2].replace('\"', '').replace('\"', '') + currentRoute[i][3].replace('\"', '').replace('\"', '');
+          }
           break;
         // The next 4 cases are based on the end of the array because of discrepencies
         // in the first few elements of the route arrays as well as varying lengths
@@ -357,7 +360,7 @@ function addRowsToTable(table) {
           newCell.innerHTML = currentRoute[i][currentRoute[i].length - 1].replace('\"', '').replace('\"', '');
           break;
         case 7: // Full Address
-          var fullAddress = currentRoute[i][1].replace('\"', '').replace('\"', '');
+          var fullAddress = currentRoute[i][1].replace('\"', '').replace('\"', '').replace('/', '').replace('-', '');
           fullAddress += ", Norman, Oklahoma, ";
           fullAddress += currentRoute[i][currentRoute[i].length - 2].replace('\"', '').replace('\"', '');
           newCell.innerHTML = fullAddress;
