@@ -371,7 +371,13 @@ function addRowsToTable(table) {
           break;
         case 7: // Full Address
           var fullAddress = currentRoute[i][1].replace('\"', '').replace('\"', '').replace('/', '').replace('-', '');
-          fullAddress += ", Norman, Oklahoma, ";
+          if (currentRoute[i][currentRoute[i].length - 4] == "\"") {
+            fullAddress += ", Norman";
+          }
+          else {
+            fullAddress += ", " + currentRoute[i][currentRoute[i].length - 4].replace('\"', '').replace('\"', '');
+          }
+          fullAddress += ", Oklahoma, ";
           fullAddress += currentRoute[i][currentRoute[i].length - 2].replace('\"', '').replace('\"', '');
           newCell.innerHTML = fullAddress;
           // Add full address to the "waypoints" array
