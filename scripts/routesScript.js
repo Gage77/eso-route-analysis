@@ -1,6 +1,6 @@
 //***************************************************************
 // @Author: Hunter Black
-// @Version: 0.8
+// @Version: 0.9
 //
 // Notes:
 //***************************************************************
@@ -61,13 +61,13 @@ function generateDirections() {
   var start = "Norman Regional Hospital, Norman, OK";  // Norman Regional Hospital lat/long
   var chosenDestination = document.getElementById("chooseDestination").value;
 
+  // Determine if a destination was specified, and set destination if it was
   var destination = currentRouteAddresses[currentRouteAddresses.length-1].location
   if (chosenDestination.valueOf() != "Default".valueOf()) {
-    console.log("destination specified");
     destination = chosenDestination;
   }
 
-  console.log(destination);
+  console.log("Destination: " + destination);
 
   for (var i = 0; i < currentRouteAddresses.length; i++) {
     console.log(currentRouteAddresses[i]);
