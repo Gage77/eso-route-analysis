@@ -13,3 +13,12 @@ This simple web application serves to take an input of addresses provided by Mea
 ### Current tools being used:
 - mealdeliverysoftware.com/software/
 - Current routes are available by logging in and downloading a csv by going to "Delivery" -> "Delivery Reports" -> "Delivery Address Data".
+
+### Todo
+- [ ] Create route analyzer for all routes
+- [ ] Create route analyzer for individual routes
+- [ ] Output analytical data
+- [ ] Design more user friendly frontend
+- [ ] Beautify front end (CSS)
+- [ ] Thoroughly bug test route generation
+- [ ] Produce product documentation detailing how to use this app
