@@ -9,10 +9,10 @@ html, body {
 }
 
 #map {
-    height: 50%;
-    width: 60%;
+    height: 60%;
+    width: 40%;
     float: right;
-    margin-top: 200px;
+    margin-top: 150px;
     border-style: solid;
     border-width: 2px;
 }
