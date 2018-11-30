@@ -15,6 +15,9 @@ This simple web application serves to take an input of addresses provided by Mea
 
 - mealdeliverysoftware.com/software/
 - Current routes are available by logging in and downloading a csv by going to "Delivery" -> "Delivery Reports" -> "Delivery Address Data".
+- HTML, CSS, Javascript
+- Bootstrap 4.0
+- Google Maps API
 
 ## Todo
 
